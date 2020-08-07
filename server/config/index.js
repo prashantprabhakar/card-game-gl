@@ -8,4 +8,10 @@ module.exports = {
     server_port: 3000,
     WINNING_SCORE:  3,
     move_expiry_time: 2*60*1000, // 2 mins
+
+    logging: {
+        level: 'info',
+        logDir: 'logs',
+        logFile: 'game'
+    }
 }

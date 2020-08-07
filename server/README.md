@@ -31,7 +31,7 @@ This is a web based card game with following features:
 - Returns: 
   ```sh
         {
-            "successs": true,
+            "success": true,
             "data": {
                 "gameStatus": "COMPLETED",
                 "winner": 2,
@@ -53,7 +53,7 @@ This is a web based card game with following features:
 - Returns
     ```sh
     {
-    "successs": true,
+    "success": true,
     "data": {
         "turn": 1,
         "status": "COMPLETED",

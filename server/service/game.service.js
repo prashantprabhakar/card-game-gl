@@ -25,11 +25,11 @@ exports.startGame = async(player1Id, player2Id) => {
         // ])
 
         // if(!player1 || !player2) {
-        //     return {successs: false, message: 'Either of the player does not exist'}
+        //     return {success: false, message: 'Either of the player does not exist'}
         // }
 
-        // if(!player1.isAvailable) return {successs: false, message: `Player 1: ${player1Id} is not available`}
-        // if(!player2.isAvailable) return {successs: false, message: `Player 2: ${player2Id} is not available`}
+        // if(!player1.isAvailable) return {success: false, message: `Player 1: ${player1Id} is not available`}
+        // if(!player2.isAvailable) return {success: false, message: `Player 2: ${player2Id} is not available`}
 
         // initialize a game
         let shuffledDeck = shuffleArray(CARDS)
@@ -54,7 +54,7 @@ exports.startGame = async(player1Id, player2Id) => {
         ])
 
         logger.info("Game added successfully",{ gameId: game.id })
-        return {successs: true, gameId: game.id }
+        return {success: true, gameId: game.id }
 
     } catch(err) {
        throw err
@@ -73,20 +73,20 @@ exports.pickACard = async(gameId, playerId, choice) => {
         let game = await GameModel.findOne({ _id: gameId, status: GAME_STATUS.INPROGRESS})
         if(!game) {
             logger.info('The Game is either completed or is invalid')
-            return { successs: false, message: 'The Game is either completed or is invalid'}
+            return { success: false, message: 'The Game is either completed or is invalid'}
         }
         
         // check if valid player is making move
         if(game.turn !== playerId) {
             logger.info("Invalid player turn", { turn: game.turn, playerId })
-            return { successs: false, message: 'Not your turn'}
+            return { success: false, message: 'Not your turn'}
         }
 
         // check if time expired
         let expiryTime = addMillisecondsToDate(game.updatedAt, move_expiry_time)
         if(new Date() > expiryTime) {
             logger.info("Time to pick card expired", { expiryTime, currentTime: new Date() })
-            return { successs: false, message: 'Time to move expired'}
+            return { success: false, message: 'Time to move expired'}
             // @TODO: Add close game here
         }
 
@@ -136,7 +136,7 @@ exports.pickACard = async(gameId, playerId, choice) => {
         logger.info("Updating info in game table", { gameUpdateObj })
         await GameModel.updateOne({ _id: gameId}, {$set: gameUpdateObj })
 
-        return {successs: true, data: {
+        return {success: true, data: {
             gameStatus: gameUpdateObj.status,
             winner: gameUpdateObj.winner,
             turn: player2,
@@ -179,7 +179,7 @@ exports.gameDetails = async(gameId) => {
 
         logger.info("Game details", {data})
         
-       return { successs: true, data }
+       return { success: true, data }
         
     } catch(err) {
         throw err

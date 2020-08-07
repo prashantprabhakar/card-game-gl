@@ -5,9 +5,9 @@ module.exports = {
         poolSize: 5,
     },
     
-    server_port: 3000,
+    server_port: 8080,
     WINNING_SCORE:  3,
-    move_expiry_time: 2*60*1000, // 2 mins
+    move_expiry_time: 20*60*1000, // 2 mins
 
     logging: {
         level: 'info',

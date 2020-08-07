@@ -1,6 +1,7 @@
 
 const express = require('express')
 const helmet = require('helmet')
+const cors = require('cors');
 const bodyParser = require('body-parser')
 
 const connectMongo = require('./utils/connectMongo')
@@ -9,6 +10,7 @@ const logger = require('./service/logger.service')
 const apis = require('./api')
 
 const app = express()
+app.use(cors())
 app.use(helmet())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

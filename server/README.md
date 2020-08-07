@@ -8,6 +8,12 @@ This is a web based card game with following features:
     * Players can ask for card of specific suit or color
     * Game ends when either player wins or game is draw
 
+### How to run
+- git clone the repo
+- cd server
+- npm i
+- node app.js
+
 
 ### APIs:
 
@@ -119,3 +125,9 @@ This is a web based card game with following features:
     ```
     
 
+
+
+#### Optimization/Enhancements to be done:
+- Implement cache
+- Sepeatae In Progress games and completed games in DB for making faster read/write 
+- Implement transactions in DB queries

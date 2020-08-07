@@ -13,6 +13,7 @@ const schema = new mongoose.Schema({
     startedAt: Date,
     endAt: Date, // cab be skipped since last updated at will be end at, but let's seperate both for future
     updatedAt: Date,
+    comment: String,
 
 
 })

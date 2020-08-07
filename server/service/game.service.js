@@ -86,8 +86,22 @@ exports.pickACard = async(gameId, playerId, choice) => {
         let expiryTime = addMillisecondsToDate(game.updatedAt, move_expiry_time)
         if(new Date() > expiryTime) {
             logger.info("Time to pick card expired", { expiryTime, currentTime: new Date() })
-            return { success: false, message: 'Time to move expired'}
-            // @TODO: Add close game here
+            
+            await GameModel.updateOne({
+                _id: gameId
+            }, {
+                $set: {
+                    updatedAt: new Date(),
+                    endAt: new Date(),
+                    comment: `Player ${game.turn} left the game`,
+                    status: GAME_STATUS.ABORTED
+                }
+            })
+            return { success: true, data: {
+                gameStatus: GAME_STATUS.ABORTED,
+                movedBy: playerId,
+            }}
+
         }
 
         //perform operation

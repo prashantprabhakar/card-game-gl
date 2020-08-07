@@ -1,7 +1,9 @@
 
+const logger = require('../service/logger.service')
+
 exports.handleCatch = (res, error, metaData={}) => {
   let message = error.message || 'Something went wrong'
-  console.log(message, {error, metaData})
+  logger.error(message, {error, metaData})
   return res.status(500).json({success: false, message})
 
 }

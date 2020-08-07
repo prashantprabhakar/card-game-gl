@@ -49,7 +49,6 @@ exports.pickACard = async(req, res) => {
         let { gameId, playerId, choice} = validationData.value
         let result = await pickACard(gameId, playerId, choice)
 
-        console.log({ result })
         if(!result.success) {
             return res.status(400).json(result)
         }

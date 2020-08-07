@@ -110,8 +110,10 @@ exports.pickACard = async(gameId, playerId, choice) => {
         logger.info("Picked card", { pickedCard, pickedCardDetails })
 
         // fetch last 4 cards from array of player move ( @TODO: Optimize this)
-        let gamePlayer = await GamePlayerModel.findOne({ gameId, playerId })
-        let lastCard = gamePlayer.moves.length ? gamePlayer.moves[gamePlayer.moves.length-1] : 0
+        let gamePlayer = await GamePlayerModel.findOne({ gameId, playerId }, {'moves': {'$slice': -1}})
+
+        let lastCard = gamePlayer.moves[0] || 0
+        //let lastCard = gamePlayer.moves.length ? gamePlayer.moves[gamePlayer.moves.length-1] : 0
         let lastCardDetails = cardDetail[lastCard]
         let player2 = game.players.filter(p => p!=playerId)[0]
 
@@ -212,12 +214,11 @@ const chooseCard = (deck, choice) => {
         if(card[choiceCriteria] == choice) {
             // swap last and this card
             [deck[lastIndex], deck[i]] = [deck[i], deck[lastIndex]] 
-            console.log({ith: deck[i], last: deck[lastIndex]})
             return deck.pop()
         }
     }
 
     // Can return error here
-    console.log("No card found with given choice")
+    logger.info("No card found with given choice")
     return deck.pop()
 }

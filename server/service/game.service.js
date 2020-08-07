@@ -143,6 +143,7 @@ exports.pickACard = async(gameId, playerId, choice) => {
             pickedCard,
             playerScore,
             pickedCardDetails,
+            movedBy: playerId,
         }}
         
 

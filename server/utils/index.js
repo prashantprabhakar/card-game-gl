@@ -9,14 +9,16 @@ exports.handleCatch = (res, error, metaData={}) => {
 }
 
 exports.shuffleArray = (array) =>  {
-  let arr = []
-    for (let i = array.length - 1; i > 0; i--) {
+  let arr = [].concat(array)
+    for (let i = arr.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
-      arr[i] = array[j]
-      arr[j] = array[i]
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr
 }
+
+
+exports.countUnique = (iterable) => new Set(iterable).size;
 
 exports.throwError = (message='Unkown message', status, errName) =>  {
   const err = new Error(message);

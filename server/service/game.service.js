@@ -86,6 +86,8 @@ exports.pickACard = async(gameId, playerId, choice) => {
         let expiryTime = addMillisecondsToDate(game.updatedAt, move_expiry_time)
         if(new Date() > expiryTime) {
             logger.info("Time to pick card expired", { expiryTime, currentTime: new Date() })
+
+            // @TODO: We can declare other player winner here; but for now; we have kept the status to be ABORTED and no one wins
             
             await GameModel.updateOne({
                 _id: gameId
@@ -113,22 +115,18 @@ exports.pickACard = async(gameId, playerId, choice) => {
         let gamePlayer = await GamePlayerModel.findOne({ gameId, playerId }, {'moves': {'$slice': -1}})
 
         let lastCard = gamePlayer.moves[0] || 0
-        //let lastCard = gamePlayer.moves.length ? gamePlayer.moves[gamePlayer.moves.length-1] : 0
-        let lastCardDetails = cardDetail[lastCard]
+        let playerScore = lastCard ? ( pickedCardDetails.value > cardDetail[lastCard].value ? gamePlayer.score+1 : 1 ) :  1
+
+        
+        let isWinningCond = playerScore == WINNING_SCORE
+        let isDrawCond = isWinningCond ? false : game.availableDeck.length == 0 
         let player2 = game.players.filter(p => p!=playerId)[0]
 
-        logger.info("Game details", { lastCard, lastCardDetails, player2})
-        
 
-        // let playerScore = pickedCard > lastCard ? gamePlayer.score+1 : 1
-        let playerScore = lastCard ? ( pickedCardDetails.value > lastCardDetails.value ? gamePlayer.score+1 : 1 ) :  1
-        let isWinningCond = playerScore == WINNING_SCORE
-        let isDrawCond = game.availableDeck.length == 0
-
-        logger.info("Scores", { playerScore })
-
+        logger.info("Game Details", { lastCard, lastCardDetail: cardDetail[lastCard], newTurn: player2, isWinningCond, isDrawCond, playerScore })
         logger.info("Adding move in gane player DB")
-         // update gane player model
+        
+        // update gane player model
         await GamePlayerModel.updateOne({
             _id: gamePlayer._id
         }, {

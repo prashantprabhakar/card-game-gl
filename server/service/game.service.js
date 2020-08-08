@@ -17,20 +17,6 @@ exports.startGame = async(player1Id, player2Id) => {
 
         logger.info("Inside start game service", { player1Id, player2Id})
 
-        // check if players are free: Commented for now; since we are not maintaining user collection and hence no check if user is already playing
-
-        // let [player1, player2] = await Promise.all([
-        //     UserModel.findOne({_id: player1Id}),
-        //     UserModel.findOne({_id: player2Id})
-        // ])
-
-        // if(!player1 || !player2) {
-        //     return {success: false, message: 'Either of the player does not exist'}
-        // }
-
-        // if(!player1.isAvailable) return {success: false, message: `Player 1: ${player1Id} is not available`}
-        // if(!player2.isAvailable) return {success: false, message: `Player 2: ${player2Id} is not available`}
-
         // initialize a game
         let shuffledDeck = shuffleArray(CARDS)
         
@@ -82,7 +68,9 @@ exports.pickACard = async(gameId, playerId, choice) => {
             return { success: false, message: 'Not your turn'}
         }
 
-        // check if time expired
+        let player2 = game.players.filter(p => p!=playerId)[0]
+
+        // check if time expired: Should be in seperate fn
         let expiryTime = addMillisecondsToDate(game.updatedAt, move_expiry_time)
         if(new Date() > expiryTime) {
             logger.info("Time to pick card expired", { expiryTime, currentTime: new Date() })
@@ -102,6 +90,7 @@ exports.pickACard = async(gameId, playerId, choice) => {
             return { success: true, data: {
                 gameStatus: GAME_STATUS.ABORTED,
                 movedBy: playerId,
+                turn: player2
             }}
 
         }
@@ -120,7 +109,6 @@ exports.pickACard = async(gameId, playerId, choice) => {
         
         let isWinningCond = playerScore == WINNING_SCORE
         let isDrawCond = isWinningCond ? false : game.availableDeck.length == 0 
-        let player2 = game.players.filter(p => p!=playerId)[0]
 
 
         logger.info("Game Details", { lastCard, lastCardDetail: cardDetail[lastCard], newTurn: player2, isWinningCond, isDrawCond, playerScore })

@@ -16,6 +16,12 @@ const schema = {
 
     gameDetailvalidation: Joi.object().keys({
         gameId: Joi.string().required().error( _ => throwError('Game Id is required and must be string', 400)),
+    }),
+
+
+    addUserValidation: Joi.object().keys({
+        name: Joi.string().min(2).required().error(_ => throwError("Name is mendatory", 400)),
+        id: Joi.number().required().error(_ => 'User Id is required and must be int', 400),
     })
 
 }
